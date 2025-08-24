@@ -1,0 +1,50 @@
+.calendar-grid {
+    text-align: center;
+}
+.calendar-cell {
+    border: 1px solid #ddd;
+    height: 150px;
+    padding: 4px;
+}
+.event {
+    display: block;
+    margin-top: 4px;
+    background: #0070d2;
+    color: white;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    padding: 2px;
+}
+
+.view-all-btn{
+    margin-top: 0.4rem;
+}
+
+.month-title{
+    font-size: 1.5rem;
+    border-style: ridge;
+    border-radius: 6px;
+    padding: 8px;
+}
+
+.evt-form-btn{
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 5px;
+}
+
+table th{
+    position: sticky;
+    top: 0;
+    background: rgb(228, 228, 228);
+    z-index: 1;
+}
+
+.refresh-btn{
+    margin-right: 1rem;
+}
