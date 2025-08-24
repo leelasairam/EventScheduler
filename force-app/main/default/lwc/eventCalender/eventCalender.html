@@ -20,7 +20,7 @@
                         <lightning-button-icon if:false={day.isPreviousMonthDate} title="Add Event" slot="actions" icon-name="utility:new" onclick={handleDayClick} data-date={day.date}></lightning-button-icon>
                         <div class="slds-p-horizontal_small">
                             <template for:each={day.initialEvents} for:item="e">
-                                <span class="event" key={e.title}><lightning-icon size="x-small" icon-name="standard:event"></lightning-icon>&nbsp;{e.title}</span>
+                                <span class="event" key={e.Id}><lightning-icon size="x-small" icon-name="standard:event"></lightning-icon>&nbsp;{e.title}</span>
                             </template>
                             <div class="view-all-btn">
                                 <template if:true={day.multipleEvents}>

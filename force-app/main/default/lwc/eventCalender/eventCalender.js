@@ -47,7 +47,7 @@ export default class EventCalender extends LightningElement {
         console.log(monthYearStr,this.currentUserId);
         await getEvents({monthYear:monthYearStr,UId:this.currentUserId,refreshId:this.refreshId})
         .then(result=>{
-            this.events = result.map(e=>({...e,date:e.Start_Date__c,title:e.Name.slice(0, 10) + '...'}));
+            this.events = result.map(e=>({...e,date:e.Start_Date__c,title:e.Name.length>12 ? e.Name.slice(0, 12) + '...' : e.Name}));
             console.log(JSON.stringify(this.events));
         })
         .catch(error=>{
