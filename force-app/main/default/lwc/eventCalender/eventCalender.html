@@ -1,6 +1,6 @@
 <template>
     <lightning-card>
-        <p class="month-title" slot="title">{monthName} {year}</p>
+        <p class="month-title" slot="title"><lightning-icon icon-name="utility:monthlyview"></lightning-icon> &nbsp; {monthName} {year}</p>
         <div class="slds-m-around_medium" slot="actions">
             <lightning-button-icon icon-name="utility:refresh" onclick={refresh} variant="neutral" class="refresh-btn"></lightning-button-icon>
             <lightning-button-icon icon-name="utility:chevronleft" onclick={handlePrev} variant="brand"></lightning-button-icon>
@@ -76,11 +76,11 @@
                             <td>
                                 <div class="slds-p-around_medium lgc-bg">
                                     <lightning-button-icon icon-name="utility:success" alternative-text="Complete"
-                                        title="Complete" class="slds-m-right_x-small"></lightning-button-icon>
+                                        title="Complete" class="slds-m-right_x-small" data-btn="event_completed" data-eventid={evt.Id} onclick={handleEventStatus}></lightning-button-icon>
                                     <lightning-button-icon icon-name="utility:pause_alt" alternative-text="On Hold"
-                                        title="On Hold" class="slds-m-right_x-small"></lightning-button-icon>
+                                        title="On Hold" class="slds-m-right_x-small" data-btn="event_onhold" data-eventid={evt.Id} onclick={handleEventStatus}></lightning-button-icon>
                                     <lightning-button-icon icon-name="utility:clear" alternative-text="Cancel"
-                                        title="Cancel"></lightning-button-icon>
+                                        title="Cancel" data-btn="event_cancel" data-eventid={evt.Id} onclick={handleEventStatus}></lightning-button-icon>
                                 </div>
                             </td>
                         </tr>

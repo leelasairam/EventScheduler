@@ -1,6 +1,7 @@
 import { LightningElement, track } from 'lwc';
 import createEvent from '@salesforce/apex/EventSchedulerController.createEvent';
 import getEvents from '@salesforce/apex/EventSchedulerController.getEvents';
+import updateEvtStatus from '@salesforce/apex/EventSchedulerController.updateEvtStatus';
 import UserId from '@salesforce/user/Id';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class EventCalender extends LightningElement {
@@ -117,6 +118,7 @@ export default class EventCalender extends LightningElement {
     }
 
     async save(){
+        this.loading = true;
         const title =  this.template.querySelector(".evt-form-title").value;
         const Start =  new Date(this.template.querySelector(".evt-form-startdate").value);
         const End =  new Date(this.template.querySelector(".evt-form-enddate").value);
@@ -134,6 +136,9 @@ export default class EventCalender extends LightningElement {
         .catch(error=>{
             console.log(error);
             this.showToast('Error',error.body.message,'error');
+        })
+        .finally(()=>{
+            this.loading = false;
         })
         this.closeNewEventModal();
     }
@@ -161,5 +166,35 @@ export default class EventCalender extends LightningElement {
         let url = `/${event.target.dataset.id}`;
         console.log(url)
         window.open(url,"_blank")
+    }
+
+    handleEventStatus(event){
+        this.loading = true;
+        const btn = event.target.dataset.btn;
+        const evtId = event.target.dataset.eventid;
+        let evtStatus;
+        if(btn==='event_completed'){
+            evtStatus = 'Completed';
+        }
+        else if(btn==='event_onhold'){
+            evtStatus = 'OnHold';
+        }
+        else if(btn==='event_cancel'){
+            evtStatus = 'Cancelled';
+        }
+        console.log(evtStatus,evtId);
+        updateEvtStatus({evtId:evtId,evtStatus:evtStatus})
+        .then(result=>{
+            this.showToast('Success',`Set to ${evtStatus} successfully`,'success');
+            this.closeAllEventModal();
+            this.refresh();
+        })
+        .catch(error=>{
+            console.log(error);
+            this.showToast('Error',error.body.message,'error');
+        })
+        .finally(()=>{
+            this.loading = false;
+        })
     }
 }
