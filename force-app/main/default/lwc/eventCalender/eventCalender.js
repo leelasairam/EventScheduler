@@ -127,11 +127,13 @@ export default class EventCalender extends LightningElement {
         await createEvent({startDate:Start,endDate:End,eventName:title})
         .then(result=>{
             console.log(result);
-            this.showToast(`Event ${result.Id} created successfully`,'','success');
+            this.showToast('Success',`Event ${result.Name} created successfully`,'success');
             //this.events.push({...result,date:result.Start_Date__c,title:result.Name})
+            this.refresh();
         })
         .catch(error=>{
             console.log(error);
+            this.showToast('Error',error.body.message,'error');
         })
         this.closeNewEventModal();
     }
@@ -152,5 +154,12 @@ export default class EventCalender extends LightningElement {
     refresh(){
         this.refreshId = new Date().toISOString();
         this.fetchEvents();
+    }
+
+    navigateToEvent(event){
+        console.log(event.target.dataset.id);
+        let url = `/${event.target.dataset.id}`;
+        console.log(url)
+        window.open(url,"_blank")
     }
 }

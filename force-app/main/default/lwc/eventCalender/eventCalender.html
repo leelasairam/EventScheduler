@@ -1,6 +1,6 @@
 <template>
     <lightning-card>
-        <p class="month-title" slot="title">{monthName},{year}</p>
+        <p class="month-title" slot="title">{monthName} {year}</p>
         <div class="slds-m-around_medium" slot="actions">
             <lightning-button-icon icon-name="utility:refresh" onclick={refresh} variant="neutral" class="refresh-btn"></lightning-button-icon>
             <lightning-button-icon icon-name="utility:chevronleft" onclick={handlePrev} variant="brand"></lightning-button-icon>
@@ -20,7 +20,7 @@
                         <lightning-button-icon if:false={day.isPreviousMonthDate} title="Add Event" slot="actions" icon-name="utility:new" onclick={handleDayClick} data-date={day.date}></lightning-button-icon>
                         <div class="slds-p-horizontal_small">
                             <template for:each={day.initialEvents} for:item="e">
-                                <span class="event" key={e.Id}><lightning-icon size="x-small" icon-name="standard:event"></lightning-icon>&nbsp;{e.title}</span>
+                                <span class="event" key={e.Id} title={e.Name} data-date={day.date} onclick={showAllEvents}><lightning-icon size="x-small" icon-name="standard:event"></lightning-icon>&nbsp;{e.title}</span>
                             </template>
                             <div class="view-all-btn">
                                 <template if:true={day.multipleEvents}>
@@ -40,7 +40,7 @@
             <lightning-button-icon slot="closeModal" icon-name="utility:close" onclick={closeNewEventModal} variant="border-filled"></lightning-button-icon>
             <div slot="header">New Event</div>
             <div slot="body">
-                <lightning-input label="Title" class="evt-form-title"></lightning-input>
+                <lightning-input label="Title" class="evt-form-title" maxlength="80"></lightning-input>
                 <lightning-input type="datetime" label="Start date" class="evt-form-startdate" value={defultDateTime} ></lightning-input>
                 <lightning-input type="datetime" label="End date" class="evt-form-enddate" value={defultDateTime}></lightning-input>
                 <div class="evt-form-btn">
@@ -54,7 +54,7 @@
     <template if:true={allEventModal}>
         <c-modal>
             <lightning-button-icon slot="closeModal" icon-name="utility:close" onclick={closeAllEventModal} variant="border-filled"></lightning-button-icon>
-            <div slot="header">View All Event</div>
+            <div slot="header">View All Events</div>
             <div slot="body">
                 <table>
                     <tbody>
@@ -65,15 +65,24 @@
                         <th>Action</th>
                     </tr>
                     <template for:each={dateEvents} for:item="evt">
-                        <tr key={evt.Id}>
-                            <td><b>{evt.Name}</b></td>
+                        <tr key={evt.Id} class={evt.Event_Status__c}>
+                            <td><a onclick={navigateToEvent} data-id={evt.Id}>{evt.Name}</a></td>
                             <td><lightning-formatted-date-time value={evt.Event_Start_Date__c} year="numeric"
                                     month="numeric" day="numeric" hour="2-digit" minute="2-digit"
                                     time-zone-name="short"></lightning-formatted-date-time></td>
                             <td><lightning-formatted-date-time value={evt.Event_End_Date__c} year="numeric" month="numeric"
                                     day="numeric" hour="2-digit" minute="2-digit"
                                     time-zone-name="short"></lightning-formatted-date-time></td>
-                            <td><lightning-button label="Cancel" variant="destructive-text" disabled={evt.Is_Cancelled__c}></lightning-button></td>
+                            <td>
+                                <div class="slds-p-around_medium lgc-bg">
+                                    <lightning-button-icon icon-name="utility:success" alternative-text="Complete"
+                                        title="Complete" class="slds-m-right_x-small"></lightning-button-icon>
+                                    <lightning-button-icon icon-name="utility:pause_alt" alternative-text="On Hold"
+                                        title="On Hold" class="slds-m-right_x-small"></lightning-button-icon>
+                                    <lightning-button-icon icon-name="utility:clear" alternative-text="Cancel"
+                                        title="Cancel"></lightning-button-icon>
+                                </div>
+                            </td>
                         </tr>
                     </template>
                     </tbody>

@@ -16,12 +16,21 @@
     padding: 2px;
 }
 
+a{
+    color:black;
+    text-decoration: underline;
+}
+
+a:hover{
+    color: darkblue;
+}
+
 .view-all-btn{
-    margin-top: 0.4rem;
+    margin-top: 0.2rem;
 }
 
 .month-title{
-    font-size: 1.5rem;
+    font-size: 1rem;
     border-style: ridge;
     border-radius: 6px;
     padding: 8px;
@@ -39,7 +48,7 @@ table, th, td {
 }
 
 table th{
-    position: sticky;
+    /*position: sticky;*/
     top: 0;
     background: rgb(228, 228, 228);
     z-index: 1;
@@ -48,3 +57,16 @@ table th{
 .refresh-btn{
     margin-right: 1rem;
 }
+
+.Completed{
+    background-color: #DDF6D2;
+}
+
+.OnHold{
+    background-color: #FEFFC4;
+}
+
+.Cancelled{
+    background-color: #E5BEB5;
+}
+
