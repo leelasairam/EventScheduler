@@ -1,6 +1,14 @@
 .calendar-grid {
     text-align: center;
 }
+
+.card-header{
+    background-color: rgb(228, 242, 245);
+    margin-bottom: 0.6rem;
+    border-radius: 6px;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
 .calendar-cell {
     border: 1px solid #ddd;
     height: 150px;
@@ -14,6 +22,7 @@
     border-radius: 4px;
     font-size: 0.75rem;
     padding: 2px;
+    text-align: left;
 }
 
 a{
@@ -30,10 +39,8 @@ a:hover{
 }
 
 .month-title{
-    font-size: 1rem;
-    border-style: ridge;
-    border-radius: 6px;
-    padding: 8px;
+    font-weight: 800;
+    font-size: 1.5rem;
 }
 
 .evt-form-btn{
@@ -69,4 +76,9 @@ table th{
 .Cancelled{
     background-color: #E5BEB5;
 }
+
+.display-date{
+    text-decoration: underline;
+}
+
 

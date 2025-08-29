@@ -1,7 +1,7 @@
 import { LightningElement, track } from 'lwc';
 import createEvent from '@salesforce/apex/EventSchedulerController.createEvent';
 import getEvents from '@salesforce/apex/EventSchedulerController.getEvents';
-import updateEvtStatus from '@salesforce/apex/EventSchedulerController.updateEvtStatus';
+import updateEvt from '@salesforce/apex/EventSchedulerController.updateEvt';
 import UserId from '@salesforce/user/Id';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class EventCalender extends LightningElement {
@@ -11,11 +11,14 @@ export default class EventCalender extends LightningElement {
     weekdays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     newEventModal = false;
     allEventModal = false;
+    editEventModal = false;
     currentUserId = UserId;
     @track dateEvents = [];
     @track defultDateTime;
     loading = false;
     refreshId = new Date().toISOString();
+    @track editEventRecord = {};
+    displaySelectedDate = '';
 
     @track events = [
         /*{ date: '2025-08-21', title: 'Team Meeting' },
@@ -24,6 +27,13 @@ export default class EventCalender extends LightningElement {
         { date: '2025-08-25', title: 'Demo2' },
         { date: '2025-08-25', title: 'Demo3' }*/
     ];
+
+    evtStatusValues = [
+            { label: 'New', value: 'New' },
+            { label: 'On Hold', value: 'OnHold' },
+            { label: 'Completed', value: 'Completed' },
+            { label: 'Cancelled', value: 'Cancelled' },
+        ];
 
     connectedCallback() {
         let today = new Date();
@@ -48,7 +58,7 @@ export default class EventCalender extends LightningElement {
         console.log(monthYearStr,this.currentUserId);
         await getEvents({monthYear:monthYearStr,UId:this.currentUserId,refreshId:this.refreshId})
         .then(result=>{
-            this.events = result.map(e=>({...e,date:e.Start_Date__c,title:e.Name.length>12 ? e.Name.slice(0, 12) + '...' : e.Name}));
+            this.events = result.map(e=>({...e,date:e.Start_Date__c,title:e.Name.length>15 ? e.Name.slice(0, 15) + '...' : e.Name}));
             console.log(JSON.stringify(this.events));
         })
         .catch(error=>{
@@ -148,6 +158,7 @@ export default class EventCalender extends LightningElement {
         const month = this.month.toString().length == 1 ? `0${this.month +1}` : `${this.month +1}`;
         const formattedDate = day.toString().length == 1 ? `0${day}` : `${day}`;
         const date = `${this.year}-${month}-${formattedDate}`;
+        this.displaySelectedDate = date;
         this.dateEvents = this.events.filter(de=>de.date==date);
         this.allEventModal = true;
     }
@@ -168,29 +179,31 @@ export default class EventCalender extends LightningElement {
         window.open(url,"_blank")
     }
 
-    handleEventStatus(event){
-        this.loading = true;
-        const btn = event.target.dataset.btn;
+    closeEditEventModal(){
+        this.editEventModal = false;
+        this.allEventModal = true;
+    }
+
+    handleEditEvent(event){
         const evtId = event.target.dataset.eventid;
-        let evtStatus;
-        if(btn==='event_completed'){
-            evtStatus = 'Completed';
-        }
-        else if(btn==='event_onhold'){
-            evtStatus = 'OnHold';
-        }
-        else if(btn==='event_cancel'){
-            evtStatus = 'Cancelled';
-        }
-        console.log(evtStatus,evtId);
-        updateEvtStatus({evtId:evtId,evtStatus:evtStatus})
+        this.allEventModal = false;
+        this.editEventModal = true;
+        this.editEventRecord = this.events.find(evt=>evt.Id==evtId);
+    }
+
+    saveEditEvt(){
+        this.loading = true;
+        const title =  this.template.querySelector(".evt-edit-title").value;
+        const Start =  new Date(this.template.querySelector(".evt-edit-startdate").value);
+        const End =  new Date(this.template.querySelector(".evt-edit-enddate").value);
+        const status = this.template.querySelector(".evt-edit-status").value;
+        updateEvt({evtId:this.editEventRecord.Id,evtStatus:status,evtStart:Start,evtEnd:End,evtName:title})
         .then(result=>{
-            this.showToast('Success',`Set to ${evtStatus} successfully`,'success');
-            this.closeAllEventModal();
+            this.showToast('Success','Changes saved successfully','success');
+            this.editEventModal = false;
             this.refresh();
         })
         .catch(error=>{
-            console.log(error);
             this.showToast('Error',error.body.message,'error');
         })
         .finally(()=>{
