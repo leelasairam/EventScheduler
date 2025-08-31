@@ -2,10 +2,10 @@
     <lightning-card>
 
         <lightning-layout class="card-header">
-            <lightning-layout-item padding="around-small" size="2">
+            <lightning-layout-item padding="around-small" size="4">
                 <p class="month-title">{monthName} {year}</p>
             </lightning-layout-item>
-            <lightning-layout-item padding="around-small" size="8">
+            <lightning-layout-item padding="around-small" size="6">
 
             </lightning-layout-item>
 
@@ -38,7 +38,7 @@
                             </template>
                             <div class="view-all-btn">
                                 <template if:true={day.multipleEvents}>
-                                    <lightning-button label="View 2+ events" variant="base" data-date={day.date} onclick={showAllEvents}></lightning-button>
+                                    <lightning-button label={day.evtCount} variant="base" data-date={day.date} onclick={showAllEvents}></lightning-button>
                                 </template>
                             </div>
                         </div>
@@ -125,6 +125,7 @@
                         <th>Title</th>
                         <th>Start</th>
                         <th>End</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                     <template for:each={dateEvents} for:item="evt">
@@ -134,6 +135,7 @@
                                     time-zone="IST"></lightning-formatted-date-time></td>
                             <td><lightning-formatted-date-time value={evt.Event_End_Date__c} hour="2-digit" minute="2-digit"
                                     time-zone="IST"></lightning-formatted-date-time></td>
+                            <td>{evt.Event_Status__c}</td>
                             <td>
                                 <div class="slds-p-around_medium lgc-bg">
                                     <lightning-button-icon icon-name="utility:edit" alternative-text="Edit"

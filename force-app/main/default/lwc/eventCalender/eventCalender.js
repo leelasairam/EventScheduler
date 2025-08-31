@@ -89,7 +89,7 @@ export default class EventCalender extends LightningElement {
             const dateStr = `${this.year}-${String(this.month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
             const evt = this.events.filter(e => e.date === dateStr);
             console.log(JSON.stringify(evt));
-            this.days.push({ key: d, date: d, events: evt ? evt : null,multipleEvents:evt.length>2 ? true : false,initialEvents: evt ? evt.slice(0,2) : null,isPreviousMonthDate:false});
+            this.days.push({ key: d, date: d, events: evt ? evt : null,multipleEvents:evt.length>2 ? true : false,initialEvents: evt ? evt.slice(0,2) : null,isPreviousMonthDate:false,evtCount:evt ? `View all ${evt.length} events` : null});
         }
     }
 

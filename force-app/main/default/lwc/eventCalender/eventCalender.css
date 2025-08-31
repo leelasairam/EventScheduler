@@ -3,7 +3,7 @@
 }
 
 .card-header{
-    background-color: rgb(228, 242, 245);
+    background-color: rgb(240, 240, 240);
     margin-bottom: 0.6rem;
     border-radius: 6px;
     margin-left: 0.5rem;
@@ -57,7 +57,7 @@ table, th, td {
 table th{
     /*position: sticky;*/
     top: 0;
-    background: rgb(228, 228, 228);
+    background: rgb(235, 235, 235);
     z-index: 1;
 }
 
@@ -66,15 +66,15 @@ table th{
 }
 
 .Completed{
-    background-color: #DDF6D2;
+    background-color: #edf7ed;
 }
 
 .OnHold{
-    background-color: #FEFFC4;
+    background-color: #f7f7eb;
 }
 
 .Cancelled{
-    background-color: #E5BEB5;
+    background-color: #f7ece9;
 }
 
 .display-date{
