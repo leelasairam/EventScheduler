@@ -139,8 +139,9 @@ export default class EventCalender extends LightningElement {
         await createEvent({startDate:Start,endDate:End,eventName:title})
         .then(result=>{
             console.log(result);
-            this.showToast('Success',`Event ${result.Name} created successfully`,'success');
+            this.showToast('Success',`Event ${result} created successfully`,'success');
             //this.events.push({...result,date:result.Start_Date__c,title:result.Name})
+            this.closeNewEventModal();
             this.refresh();
         })
         .catch(error=>{
@@ -150,7 +151,6 @@ export default class EventCalender extends LightningElement {
         .finally(()=>{
             this.loading = false;
         })
-        this.closeNewEventModal();
     }
 
     showAllEvents(event){
