@@ -146,7 +146,8 @@ export default class EventCalender extends LightningElement {
         })
         .catch(error=>{
             console.log(error);
-            this.showToast('Error',error.body.message,'error');
+            const errorMsg = error.body.message.split('#');
+            this.showToast(errorMsg[0],errorMsg[1],'error');
         })
         .finally(()=>{
             this.loading = false;
@@ -204,7 +205,8 @@ export default class EventCalender extends LightningElement {
             this.refresh();
         })
         .catch(error=>{
-            this.showToast('Error',error.body.message,'error');
+            const errorMsg = error.body.message.split('#');
+            this.showToast(errorMsg[0],errorMsg[1],'error');
         })
         .finally(()=>{
             this.loading = false;

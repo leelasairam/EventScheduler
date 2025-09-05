@@ -11,7 +11,7 @@ public class EventSchedulerController {
         list<Database.SaveResult>results = Database.insert(evtToInsert, false);
         for(Database.SaveResult sr : results){
             if(!sr.isSuccess()){
-                throw new AuraHandledException(sr.getErrors()[0].getMessage());
+                throw new AuraHandledException(sr.getErrors()[0].getStatusCode() + '#' + sr.getErrors()[0].getMessage());
             }
             else{
                 successRecIds.add(sr.getId());
@@ -39,7 +39,7 @@ public class EventSchedulerController {
         list<Database.SaveResult>results = Database.update(evtToUpdate, false);
         for(Database.SaveResult sr : results){
             if(!sr.isSuccess()){
-                throw new AuraHandledException(sr.getErrors()[0].getMessage());
+                throw new AuraHandledException(sr.getErrors()[0].getStatusCode() + '#' + sr.getErrors()[0].getMessage());
             }
             else{
                 successRecIds.add(sr.getId());
