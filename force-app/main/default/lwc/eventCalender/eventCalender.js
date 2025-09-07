@@ -1,10 +1,14 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track,wire } from 'lwc';
 import createEvent from '@salesforce/apex/EventSchedulerController.createEvent';
 import getEvents from '@salesforce/apex/EventSchedulerController.getEvents';
 import updateEvt from '@salesforce/apex/EventSchedulerController.updateEvt';
+import getCalenderUser from '@salesforce/apex/EventSchedulerController.getCalenderUser';
 import UserId from '@salesforce/user/Id';
+import { CurrentPageReference } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class EventCalender extends LightningElement {
+    caseId;
+    caseNumber;
     @track year;
     @track month;
     @track days = [];
@@ -12,7 +16,9 @@ export default class EventCalender extends LightningElement {
     newEventModal = false;
     allEventModal = false;
     editEventModal = false;
+    changeOwnerModal = false;
     currentUserId = UserId;
+    currentUserName = '';
     @track dateEvents = [];
     @track defultDateTime;
     loading = false;
@@ -34,12 +40,23 @@ export default class EventCalender extends LightningElement {
             { label: 'Completed', value: 'Completed' },
             { label: 'Cancelled', value: 'Cancelled' },
         ];
+    
+    @wire(CurrentPageReference)
+    getStateParameters(currentPageRef) {
+        if (currentPageRef && currentPageRef.state) {
+            this.caseId = currentPageRef.state.c__caseId;
+            this.caseNumber = currentPageRef.state.c__caseNumber;
+        }
+        console.log(this.CaseNumber);
+    }
 
     connectedCallback() {
         let today = new Date();
         this.year = today.getFullYear();
         this.month = today.getMonth();
         this.fetchEvents();
+        this.fetchCalenderUser();
+        //console.log('$$Case Details',this.caseId,this.caseNumber);
     }
 
     showToast(title,msg,varient) {
@@ -52,13 +69,23 @@ export default class EventCalender extends LightningElement {
         this.dispatchEvent(event);
     }
 
+    fetchCalenderUser(){
+        getCalenderUser({uid:this.currentUserId})
+        .then(result=>{
+            this.currentUserName = result.Name;;
+        })
+        .catch(error=>{
+            console.log(error);
+        })
+    }
+
     async fetchEvents(){
         this.loading = true;
         const monthYearStr = new Date(this.year, this.month).toLocaleString('default', { month: 'long' })+this.year;
         console.log(monthYearStr,this.currentUserId);
         await getEvents({monthYear:monthYearStr,UId:this.currentUserId,refreshId:this.refreshId})
         .then(result=>{
-            this.events = result.map(e=>({...e,date:e.Start_Date__c,title:e.Name.length>15 ? e.Name.slice(0, 15) + '...' : e.Name}));
+            this.events = result.map(e=>({...e,date:e.Start_Date__c,title:e.Name.length>15 ? e.Name.slice(0, 15) + '...' : e.Name,caseNumber:e.Case__r ? e.Case__r.CaseNumber : null}));
             console.log(JSON.stringify(this.events));
         })
         .catch(error=>{
@@ -136,7 +163,7 @@ export default class EventCalender extends LightningElement {
             this.showToast('Please enter event title','','error');
             return;
         }
-        await createEvent({startDate:Start,endDate:End,eventName:title})
+        await createEvent({startDate:Start,endDate:End,eventName:title,Owner:this.currentUserId,caseId:this.caseId})
         .then(result=>{
             console.log(result);
             this.showToast('Success',`Event ${result} created successfully`,'success');
@@ -173,7 +200,7 @@ export default class EventCalender extends LightningElement {
         this.fetchEvents();
     }
 
-    navigateToEvent(event){
+    navigateToRecord(event){
         console.log(event.target.dataset.id);
         let url = `/${event.target.dataset.id}`;
         console.log(url)
@@ -198,7 +225,7 @@ export default class EventCalender extends LightningElement {
         const Start =  new Date(this.template.querySelector(".evt-edit-startdate").value);
         const End =  new Date(this.template.querySelector(".evt-edit-enddate").value);
         const status = this.template.querySelector(".evt-edit-status").value;
-        updateEvt({evtId:this.editEventRecord.Id,evtStatus:status,evtStart:Start,evtEnd:End,evtName:title})
+        updateEvt({evtId:this.editEventRecord.Id,evtStatus:status,evtStart:Start,evtEnd:End,evtName:title,caseId:this.caseId})
         .then(result=>{
             this.showToast('Success','Changes saved successfully','success');
             this.editEventModal = false;
@@ -211,5 +238,21 @@ export default class EventCalender extends LightningElement {
         .finally(()=>{
             this.loading = false;
         })
+    }
+
+    handleUserChange(event){
+        const value = event.detail.value;
+        console.log(value);
+        this.currentUserId = value;
+        this.refresh();
+        this.fetchCalenderUser();
+        this.closeChangeOwnerModal();
+    }
+    handleChangeOwner(){
+        this.changeOwnerModal = true;
+    }
+
+    closeChangeOwnerModal(){
+        this.changeOwnerModal = false;
     }
 }

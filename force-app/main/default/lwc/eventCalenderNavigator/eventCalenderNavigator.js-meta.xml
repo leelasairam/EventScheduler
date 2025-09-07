@@ -3,7 +3,6 @@
     <apiVersion>64.0</apiVersion>
     <isExposed>true</isExposed>
    <targets>
-       <target>lightning__AppPage</target>
-       <target>lightning__UrlAddressable</target>
+       <target>lightning__RecordAction</target>
    </targets>
 </LightningComponentBundle>

@@ -1,18 +1,25 @@
 <template>
     <lightning-card>
-
+        <!--Month title-->
         <lightning-layout class="card-header">
-            <lightning-layout-item padding="around-small" size="4">
+            <lightning-layout-item padding="around-small" size="5">
                 <p class="month-title">{monthName} {year}</p>
             </lightning-layout-item>
-            <lightning-layout-item padding="around-small" size="6">
-
-            </lightning-layout-item>
-
+            <!--Case Number-->
             <lightning-layout-item padding="around-small" size="2">
+                <lightning-badge label={caseNumber} class="slds-badge_lightest header-badge" icon-name="action:new_case"></lightning-badge>
+            </lightning-layout-item>
+            <!--Current User-->
+            <lightning-layout-item padding="around-small" size="2">
+                <lightning-badge label={currentUserName} class="slds-badge_lightest header-badge" icon-name="utility:user"></lightning-badge>
+            </lightning-layout-item>
+            <!--actions-->
+            <lightning-layout-item padding="around-small" size="3">
                 <div>
+                    <lightning-button-icon icon-name="utility:change_owner" onclick={handleChangeOwner} variant="neutral"
+                        class="seperate-btn"></lightning-button-icon>
                     <lightning-button-icon icon-name="utility:refresh" onclick={refresh} variant="neutral"
-                        class="refresh-btn"></lightning-button-icon>
+                        class="seperate-btn"></lightning-button-icon>
                     <lightning-button-icon icon-name="utility:chevronleft" onclick={handlePrev} variant="brand"></lightning-button-icon>
                     <lightning-button-icon icon-name="utility:chevronright" onclick={handleNext} class="slds-m-left_small"
                         variant="brand"></lightning-button-icon>
@@ -69,7 +76,7 @@
                         <lightning-input label="Title" class="evt-form-title" maxlength="80"></lightning-input>
                     </lightning-layout-item>
                     <lightning-layout-item padding="around-small" size="6">
-                        <lightning-combobox options={evtStatusValues} class="evt-edit-status" value="New" label="Status" disabled="true"></lightning-combobox>
+                        <lightning-input value={caseNumber} label="Case" disabled="true"></lightning-input>
                     </lightning-layout-item>
                 </lightning-layout>
 
@@ -123,6 +130,7 @@
                     <tbody>
                     <tr>
                         <th>Title</th>
+                        <th>Case</th>
                         <th>Start</th>
                         <th>End</th>
                         <th>Status</th>
@@ -130,7 +138,8 @@
                     </tr>
                     <template for:each={dateEvents} for:item="evt">
                         <tr key={evt.Id} class={evt.Event_Status__c}>
-                            <td><a onclick={navigateToEvent} data-id={evt.Id}>{evt.Name}</a></td>
+                            <td><a onclick={navigateToRecord} data-id={evt.Id}>{evt.Name}</a></td>
+                            <td><a onclick={navigateToRecord} data-id={evt.Case__c}>{evt.caseNumber}</a></td>
                             <td><lightning-formatted-date-time value={evt.Event_Start_Date__c} hour="2-digit" minute="2-digit"
                                     time-zone="IST"></lightning-formatted-date-time></td>
                             <td><lightning-formatted-date-time value={evt.Event_End_Date__c} hour="2-digit" minute="2-digit"
@@ -146,6 +155,27 @@
                     </template>
                     </tbody>
                 </table>
+            </div>
+        </c-modal>
+    </template>
+    <!--Change Owner Modal-->
+    <template if:true={changeOwnerModal}>
+        <c-modal>
+            <lightning-button-icon slot="closeModal" icon-name="utility:close" onclick={closeChangeOwnerModal} variant="border-filled"></lightning-button-icon>
+            <div slot="header">Change Calender</div>
+            <div slot="body">
+                <div class="change-owner-inp">
+                    <table style="width: 40%;">
+                        <tbody>
+                            <tr>
+                                <td style="width: 20%;">Change Events calender to :</td>
+                                <td style="width: 20%;"><c-custom-lookup1 fields="Id,Name" additional-filter="AND IsActive = true" object-api-name="User"
+                                        searchable-field="Name" index='NA' field-name="NA" onlookupselected={handleUserChange}>
+                                    </c-custom-lookup1></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </c-modal>
     </template>

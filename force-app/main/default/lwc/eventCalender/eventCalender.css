@@ -61,7 +61,7 @@ table th{
     z-index: 1;
 }
 
-.refresh-btn{
+.seperate-btn{
     margin-right: 1rem;
 }
 
@@ -79,6 +79,15 @@ table th{
 
 .display-date{
     text-decoration: underline;
+}
+
+.change-owner-inp{
+    text-align: center;
+    height: 200px;
+}
+
+.header-badge{
+    margin-top: 0.4rem;
 }
 
 
