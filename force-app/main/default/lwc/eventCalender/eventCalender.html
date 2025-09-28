@@ -162,19 +162,14 @@
     <template if:true={changeOwnerModal}>
         <c-modal>
             <lightning-button-icon slot="closeModal" icon-name="utility:close" onclick={closeChangeOwnerModal} variant="border-filled"></lightning-button-icon>
-            <div slot="header">Change Calender</div>
+            <div slot="header">Change calender to different user</div>
             <div slot="body">
-                <div class="change-owner-inp">
-                    <table style="width: 40%;">
-                        <tbody>
-                            <tr>
-                                <td style="width: 20%;">Change Events calender to :</td>
-                                <td style="width: 20%;"><c-custom-lookup1 fields="Id,Name" additional-filter="AND IsActive = true" object-api-name="User"
-                                        searchable-field="Name" index='NA' field-name="NA" onlookupselected={handleUserChange}>
-                                    </c-custom-lookup1></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div>
+                    <div style="margin-left:30rem;margin-top:2rem;height:200px">
+                        <c-custom-lookup1 fields="Id,Name" additional-filter="AND IsActive = true" object-api-name="User"
+                            searchable-field="Name" index='NA' field-name="NA" onlookupselected={handleUserChange} style="width: 500px;">
+                        </c-custom-lookup1>
+                    </div>
                 </div>
             </div>
         </c-modal>
