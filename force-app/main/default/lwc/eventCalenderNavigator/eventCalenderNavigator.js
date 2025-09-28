@@ -42,7 +42,9 @@ export default class EventCalenderNavigator extends NavigationMixin(LightningEle
         }).then(url => {
             // Open the generated URL in a new tab
             window.open(url, "_blank");
-            this.msg = "Opened 'Event Scheduler' page in next tab."
+            setTimeout(()=>{
+                this.msg = "Opened 'Event Scheduler' page in next tab."
+            },2000)
         });
     }
 }
