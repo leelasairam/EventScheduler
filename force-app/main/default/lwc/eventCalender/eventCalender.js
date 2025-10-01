@@ -184,7 +184,7 @@ export default class EventCalender extends LightningElement {
 
     showAllEvents(event){
         const day = event.target.dataset.date;
-        const month = this.month.toString().length == 1 ? `0${this.month +1}` : `${this.month +1}`;
+        const month = (this.month+1).toString().length == 1 ? `0${this.month +1}` : `${this.month +1}`;
         const formattedDate = day.toString().length == 1 ? `0${day}` : `${day}`;
         const date = `${this.year}-${month}-${formattedDate}`;
         this.displaySelectedDate = date;
