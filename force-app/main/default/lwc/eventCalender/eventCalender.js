@@ -142,7 +142,7 @@ export default class EventCalender extends LightningElement {
     handleDayClick(event) {
         let day = event.target.dataset.date;
         if (day) {
-            const month = this.month.toString().length == 1 ? `0${this.month +1}` : `${this.month +1}`;
+            const month = (this.month+1).toString().length == 1 ? `0${this.month +1}` : `${this.month +1}`;
             const formattedDate = day.toString().length == 1 ? `0${day}` : `${day}`;
             this.defultDateTime = `${this.year}-${month}-${formattedDate}T09:00`;
             console.log(this.defultDateTime);

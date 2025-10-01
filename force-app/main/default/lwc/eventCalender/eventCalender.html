@@ -165,9 +165,9 @@
             <div slot="header">Change calender to different user</div>
             <div slot="body">
                 <div>
-                    <div style="margin-left:30rem;margin-top:2rem;height:200px">
+                    <div style="margin-left:20rem;margin-top:1rem;height:200px">
                         <c-custom-lookup1 fields="Id,Name" additional-filter="AND IsActive = true" object-api-name="User"
-                            searchable-field="Name" index='NA' field-name="NA" onlookupselected={handleUserChange} style="width: 500px;">
+                            searchable-field="Name" index='NA' field-name="NA" onlookupselected={handleUserChange} dynamic-style="width: 500px;" dynamic-placeholder="Enter user name..." >
                         </c-custom-lookup1>
                     </div>
                 </div>
