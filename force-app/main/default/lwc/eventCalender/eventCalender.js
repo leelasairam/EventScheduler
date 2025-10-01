@@ -226,15 +226,16 @@ export default class EventCalender extends LightningElement {
         const Start =  new Date(this.template.querySelector(".evt-edit-startdate").value);
         const End =  new Date(this.template.querySelector(".evt-edit-enddate").value);
         const status = this.template.querySelector(".evt-edit-status").value;
-        updateEvt({evtId:this.editEventRecord.Id,evtStatus:status,evtStart:Start,evtEnd:End,evtName:title,caseId:this.caseId})
+        updateEvt({evtId:this.editEventRecord.Id,evtStatus:status,evtStart:Start,evtEnd:End,evtName:title,caseId:this.caseId,Owner:this.currentUserId})
         .then(result=>{
-            this.showToast('Success','Changes saved successfully','success');
+            this.showToast('Success','Changes saved successfully.','success');
             this.editEventModal = false;
             this.refresh();
         })
         .catch(error=>{
             const errorMsg = error.body.message.split('#');
             this.showToast(errorMsg[0],errorMsg[1],'error');
+            console.log(error);
         })
         .finally(()=>{
             this.loading = false;

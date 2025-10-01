@@ -1,6 +1,9 @@
 public class EventSchedulerController {
 	@AuraEnabled
     public static String createEvent(datetime startDate, datetime endDate,string eventName,String Owner,String caseId){
+        if(isDatesOverridden(startDate,endDate,Owner)){
+            throw new AuraHandledException('Timings overlaping. Please choose different timings.');
+        }
         list<Schedule_Event__c>evtToInsert = new list<Schedule_Event__c>();
         list<String>successRecIds = new list<String>();
         Schedule_Event__c evt = new Schedule_Event__c();
@@ -28,7 +31,10 @@ public class EventSchedulerController {
     }
     
     @AuraEnabled
-    public static String updateEvt(Id evtId,String evtStatus,datetime evtStart, datetime evtEnd, String evtName,String caseId){
+    public static String updateEvt(Id evtId,String evtStatus,datetime evtStart, datetime evtEnd, String evtName,String caseId,String Owner){
+       if(isDatesOverridden(evtStart,evtEnd,Owner)){
+           throw new AuraHandledException('Timings overlaping. Please choose different timings.');
+       }
        list<Schedule_Event__c>evtToUpdate = new list<Schedule_Event__c>();
        list<String>successRecIds = new list<String>();
         Schedule_Event__c evt = new Schedule_Event__c();
@@ -59,5 +65,18 @@ public class EventSchedulerController {
     @AuraEnabled(cacheable=true)
     public static Case getCaseDetails(String CaseId){
         return [SELECT Id,CaseNumber FROM Case WHERE Id =: CaseId LIMIT 1];
+    }
+    
+    public static Boolean isDatesOverridden(datetime startDateTime, datetime endDateTime, String Owner){
+        Boolean isOverridden = false;
+        Date startDate = startDateTime.date();
+        Date endDate = endDateTime.date();
+        list<Schedule_Event__c>evts = [SELECT Id,Name,Event_Start_Date__c, Event_End_Date__c, Start_Date__c, End_Date__c,Event_Month_Year__c,Event_Status__c ,Case__c,Case__r.CaseNumber,Owner.Name FROM Schedule_Event__c WHERE OwnerId =:Owner AND DAY_ONLY(Event_Start_Date__c) >= :startDate AND DAY_ONLY(Event_End_Date__c) <= :endDate AND Event_Status__c != 'Cancelled'];
+        for(Schedule_Event__c evt : evts){
+            if (startDateTime < evt.Event_End_Date__c && endDateTime > evt.Event_Start_Date__c) {
+            	isOverridden = true;
+        	}
+        }
+        return isOverridden;
     }
 }
