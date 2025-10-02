@@ -164,7 +164,7 @@ export default class EventCalender extends LightningElement {
             this.showToast('Please enter event title','','error');
             return;
         }
-        await createEvent({startDate:Start,endDate:End,eventName:title,Owner:this.currentUserId,caseId:this.caseId})
+        await createEvent({startDate:Start,endDate:End,eventName:title,Owner:this.currentUserId,caseId:this.caseId,caseNumber:this.caseNumber})
         .then(result=>{
             console.log(result);
             this.showToast('Success',`Event ${result} created successfully`,'success');
