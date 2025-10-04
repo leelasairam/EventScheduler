@@ -1,7 +1,33 @@
 <template>
-    <div style="height: 150px;">
-        <lightning-card title="Navigate to Schedule Event">
-            <p class="slds-p-horizontal_small">{msg}</p>
-        </lightning-card>
-    </div>
+    <div style="height: 250px;padding:0.5rem">
+        <div style="font-weight: 600;margin-bottom:1rem;background-color:rgb(255, 255, 222);padding:0.5rem;white-space: pre-line;">{msg}</div>
+        
+            <div>
+                    <table if:true={caseAssigned}>
+                        <tbody>
+                            <tr>
+                                <th>Event Name</th>
+                                <th>Event Status</th>
+                                <th>Assigned To</th>
+                                <th>Action</th>
+                            </tr>
+                            <template for:each={caseEvts} for:item="evt">
+                                <tr key={evt.Id}>
+                                    <td>{evt.Name}</td>
+                                    <td>{evt.Event_Status__c}</td>
+                                    <td>{evt.Owner}</td>
+                                    <td>
+                                        <lightning-button label="cancel" variant="destructive-text" data-evtid={evt.Id} onclick={cancelEvt}></lightning-button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                <!--Additional Resource Button-->
+                <div style="text-align: center;margin-top: 1.5rem" if:true={showBtn}>
+                    <lightning-button label={btnLabel} onclick={navigateToCase} variant="brand"></lightning-button>
+                </div>
+            </div>
+        
+        </div>
 </template>

@@ -9,6 +9,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class EventCalender extends LightningElement {
     caseId;
     caseNumber;
+    createAsAdditionalRes = false;
     @track year;
     @track month;
     @track days = [];
@@ -46,8 +47,9 @@ export default class EventCalender extends LightningElement {
         if (currentPageRef && currentPageRef.state) {
             this.caseId = currentPageRef.state.c__caseId;
             this.caseNumber = currentPageRef.state.c__caseNumber;
+            this.createAsAdditionalRes = currentPageRef.state.c__additionalRes;
         }
-        console.log(this.CaseNumber);
+        console.log('@wire details',this.caseNumber,this.createAsAdditionalRes);
     }
 
     connectedCallback() {
@@ -164,7 +166,7 @@ export default class EventCalender extends LightningElement {
             this.showToast('Please enter event title','','error');
             return;
         }
-        await createEvent({startDate:Start,endDate:End,eventName:title,Owner:this.currentUserId,caseId:this.caseId,caseNumber:this.caseNumber})
+        await createEvent({startDate:Start,endDate:End,eventName:title,Owner:this.currentUserId,caseId:this.caseId,caseNumber:this.caseNumber,isAdditionalRes:this.createAsAdditionalRes})
         .then(result=>{
             console.log(result);
             this.showToast('Success',`Event ${result} created successfully`,'success');
